@@ -1,4 +1,4 @@
-package com.gt.cmp_contactlist
+package com.gt.cmp_contactlist.core.presentation
 
 
 import android.app.Activity

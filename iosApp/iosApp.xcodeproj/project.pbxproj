@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		09708C688AC312FF38BC96F3 /* Cmp_contactlist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cmp_contactlist.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		09708C688AC312FF38BC96F3 /* cmp_contactlist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cmp_contactlist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,7 +59,7 @@
 		1E6D039D263CC9667E05F94D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09708C688AC312FF38BC96F3 /* Cmp_contactlist.app */,
+				09708C688AC312FF38BC96F3 /* cmp_contactlist.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 09708C688AC312FF38BC96F3 /* Cmp_contactlist.app */;
+			productReference = 09708C688AC312FF38BC96F3 /* cmp_contactlist.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

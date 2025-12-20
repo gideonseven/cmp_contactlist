@@ -13,7 +13,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+            App(
+                darkTheme = true,
+                dynamicColor = true
+            )
         }
     }
 }
@@ -21,5 +24,8 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    App(
+        darkTheme = true,
+        dynamicColor = true
+    )
 }

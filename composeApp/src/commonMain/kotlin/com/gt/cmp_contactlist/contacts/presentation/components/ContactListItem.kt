@@ -1,4 +1,4 @@
-package com.gt.cmp_contactlist.contacts.domain
+package com.gt.cmp_contactlist.contacts.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.gt.cmp_contactlist.contacts.presentation.components.ContactPhoto
+import com.gt.cmp_contactlist.contacts.domain.Contact
 
 @Composable
 fun ContactListItem(
