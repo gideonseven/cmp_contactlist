@@ -1,3 +1,4 @@
+import org.gradle.declarative.dsl.schema.FqName.Empty.packageName
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -47,6 +48,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.sqlDelight.runtime)
+            implementation(libs.sqlDelight.coroutine)
             implementation(libs.kotlinx.datetime)
             implementation(libs.moko.core)
             implementation(libs.moko.compose)
@@ -86,6 +88,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+sqldelight {
+    databases {
+        create("ContactDatabase") {
+            packageName = "com.gt.cmp_contactlist.database"
+        }
     }
 }
 
