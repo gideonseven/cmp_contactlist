@@ -1,4 +1,4 @@
-rootProject.name = "Cmp_contactlist"
+rootProject.name = "cmp_contactlist"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
