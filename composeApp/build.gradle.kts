@@ -1,4 +1,3 @@
-import org.gradle.declarative.dsl.schema.FqName.Empty.packageName
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -94,7 +93,7 @@ android {
 sqldelight {
     databases {
         create("ContactDatabase") {
-            packageName = "com.gt.cmp_contactlist.database"
+            packageName = "com.gt.cmp_contactlist.sqldelight.database"
         }
     }
 }

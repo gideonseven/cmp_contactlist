@@ -1,7 +1,7 @@
 CREATE TABLE contactEntity (
  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
- firstname TEXT NOT NULL,
- lastname TEXT NOT NULL,
+ firstName TEXT NOT NULL,
+ lastName TEXT NOT NULL,
  phoneNumber TEXT NOT NULL,
  email TEXT NOT NULL,
  createdAt INTEGER NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE contactEntity (
 getContacts:
 SELECT *
 FROM contactEntity
-ORDER BY firstname ASC;
+ORDER BY firstName ASC;
 
 getRecentContacts:
 SELECT *
@@ -23,8 +23,8 @@ insertContactEntity:
 INSERT OR REPLACE
 INTO contactEntity (
 id,
-firstname,
-lastname,
+firstName,
+lastName,
 phoneNumber,
 email,
 createdAt,
