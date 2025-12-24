@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.domain.ContactDataSource
-import com.gt.cmp_contactlist.database.ContactDatabase
+import com.gt.cmp_contactlist.sqldelight.database.ContactDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +28,15 @@ class SqlDelightContactDataSource(
     }
 
     override fun getRecentContacts(amount: Int): Flow<List<Contact>> {
-        TODO("Not yet implemented")
+        return queries
+            .getRecentContacts(amount.toLong())
+            .asFlow()
+            .mapToList(Dispatchers.IO)
+            .map { contactEntities ->
+                contactEntities.map { contactEntity ->
+                    contactEntity.toContact()
+                }
+            }
     }
 
     override suspend fun insertContact(contact: Contact) {
