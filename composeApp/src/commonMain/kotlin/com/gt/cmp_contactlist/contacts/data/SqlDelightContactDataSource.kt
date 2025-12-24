@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlin.time.Clock
 
 class SqlDelightContactDataSource(
     db: ContactDatabase
@@ -40,11 +41,19 @@ class SqlDelightContactDataSource(
     }
 
     override suspend fun insertContact(contact: Contact) {
-        TODO("Not yet implemented")
+        queries.insertContactEntity(
+            id = contact.id,
+            firstName = contact.firstName,
+            lastName = contact.lastName,
+            phoneNumber = contact.phoneNumber,
+            email = contact.email,
+            createdAt = Clock.System.now().toEpochMilliseconds(),
+            imagePath = null
+        )
     }
 
     override suspend fun deleteContact(id: Long) {
-        TODO("Not yet implemented")
+        queries.deleteContact(id)
     }
 
 }

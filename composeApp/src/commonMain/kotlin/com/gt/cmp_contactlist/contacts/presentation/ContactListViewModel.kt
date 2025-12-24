@@ -4,33 +4,115 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.gt.cmp_contactlist.contacts.domain.Contact
+import com.gt.cmp_contactlist.contacts.domain.ContactDataSource
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class ContactListViewModel : ViewModel() {
+class ContactListViewModel(
+    private val contactDataSource: ContactDataSource
+) : ViewModel() {
     private val _state = MutableStateFlow(
-        ContactListState(
-            contacts = contacts
-        )
+        ContactListState()
     )
+    val state = combine(
+        _state,
+        contactDataSource.getContacts(),
+        contactDataSource.getRecentContacts(20)
+    ) { state, contacts, recentContacts ->
+        state.copy(
+            contacts = contacts,
+            recentlyAddedContacts = recentContacts,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), ContactListState())
 
-    val state = _state.asStateFlow()
 
     var newContact: Contact? by mutableStateOf(null)
         private set
 
     fun onEvent(event: ContactListEvent) {
+        when (event) {
+            ContactListEvent.DeleteContact -> {
+                viewModelScope.launch {
+                    _state.value.selectedContact?.id?.let { id ->
+                        _state.update {
+                            it.copy(
+                                isSelectedContactSheetOpen = false
+                            )
+                        }
+                        contactDataSource.deleteContact(id = id)
+                        delay(300L) // animation delay
+                        _state.update {
+                            it.copy(
+                                selectedContact = null
+                            )
+                        }
+                    }
+                }
+            }
 
+            ContactListEvent.DismissContact -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            isSelectedContactSheetOpen = false,
+                            isAddContactSheetOpen = false,
+                            firstNameError = null,
+                            lastNameError = null,
+                            emailError = null,
+                            phoneNumberError = null
+                        )
+                    }
+                    delay(300L)
+                    newContact = null
+                    _state.update {
+                        it.copy(
+                            selectedContact = null
+                        )
+                    }
+                }
+            }
+
+            is ContactListEvent.EditContact -> {
+                _state.update {
+                    it.copy(
+                        selectedContact = null,
+                        isAddContactSheetOpen = true,
+                        isSelectedContactSheetOpen = false
+                    )
+                }
+                newContact = event.contact
+            }
+
+            ContactListEvent.OnAddNewContactClick -> {
+                _state.update {
+                    it.copy(
+                        isAddContactSheetOpen = true
+                    )
+                }
+                newContact = Contact(
+                    id = null,
+                    firstName = "",
+                    lastName = "",
+                    phoneNumber = "",
+                    email = "",
+                    photoBytes = null
+                )
+            }
+
+            ContactListEvent.OnAddPhotoClicked -> TODO()
+            is ContactListEvent.OnEmailChanged -> TODO()
+            is ContactListEvent.OnFirstNameChanged -> TODO()
+            is ContactListEvent.OnLastNameChanged -> TODO()
+            is ContactListEvent.OnPhoneNumberChanged -> TODO()
+            is ContactListEvent.OnPhotoPicked -> TODO()
+            ContactListEvent.SaveContact -> TODO()
+            is ContactListEvent.SelectContact -> TODO()
+        }
     }
-}
-private val contacts = (1..50).map {
-    Contact(
-        id = it.toLong(),
-        firstName = "First$it",
-        lastName = "Last$it",
-        email = "test@test$it.com",
-        phoneNumber = "1234567890",
-        photoBytes = null
-    )
 }
