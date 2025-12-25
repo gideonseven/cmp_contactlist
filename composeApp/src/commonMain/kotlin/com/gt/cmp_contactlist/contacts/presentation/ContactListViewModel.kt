@@ -105,14 +105,49 @@ class ContactListViewModel(
                 )
             }
 
-            ContactListEvent.OnAddPhotoClicked -> TODO()
-            is ContactListEvent.OnEmailChanged -> TODO()
-            is ContactListEvent.OnFirstNameChanged -> TODO()
-            is ContactListEvent.OnLastNameChanged -> TODO()
-            is ContactListEvent.OnPhoneNumberChanged -> TODO()
-            is ContactListEvent.OnPhotoPicked -> TODO()
-            ContactListEvent.SaveContact -> TODO()
-            is ContactListEvent.SelectContact -> TODO()
+            is ContactListEvent.OnEmailChanged -> {
+                newContact = newContact?.copy(
+                    email = event.email
+                )
+            }
+
+            is ContactListEvent.OnFirstNameChanged -> {
+                newContact = newContact?.copy(
+                    firstName = event.firstName
+                )
+            }
+
+            is ContactListEvent.OnLastNameChanged -> {
+                newContact = newContact?.copy(
+                    lastName = event.lastName
+                )
+            }
+
+            is ContactListEvent.OnPhoneNumberChanged -> {
+                newContact = newContact?.copy(
+                    phoneNumber = event.phoneNumber
+                )
+            }
+
+            is ContactListEvent.OnPhotoPicked -> {
+                newContact = newContact?.copy(
+                    photoBytes = event.bytes
+                )
+            }
+
+            ContactListEvent.SaveContact -> {
+                newContact?.let { contact ->
+
+                }
+            }
+            is ContactListEvent.SelectContact -> {
+                _state.update {
+                    it.copy(
+                        selectedContact = event.contact,
+                        isSelectedContactSheetOpen = true
+                    )
+                }
+            }
         }
     }
 }
