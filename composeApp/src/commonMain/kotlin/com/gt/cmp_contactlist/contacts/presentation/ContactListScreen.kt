@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gt.cmp_contactlist.contacts.domain.Contact
+import com.gt.cmp_contactlist.contacts.presentation.components.AddContactSheet
 import com.gt.cmp_contactlist.contacts.presentation.components.ContactListItem
 
 @Composable
@@ -39,11 +40,11 @@ fun ContactListScreen(
             }
         }
     ) {
-        LazyColumn (
+        LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
             item {
                 Text(
                     text = "My contacts (${state.contacts.size})",
@@ -54,7 +55,7 @@ fun ContactListScreen(
                 )
             }
 
-            items(state.contacts){ contact ->
+            items(state.contacts) { contact ->
                 ContactListItem(
                     contact = contact,
                     modifier = Modifier
@@ -67,4 +68,11 @@ fun ContactListScreen(
             }
         }
     }
+
+    AddContactSheet(
+        state = state,
+        newContact = newContact,
+        isOpen = state.isAddContactSheetOpen,
+        onEvent = onEvent
+    )
 }
