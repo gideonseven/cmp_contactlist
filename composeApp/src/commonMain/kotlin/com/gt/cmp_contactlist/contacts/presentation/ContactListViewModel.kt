@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.domain.ContactDataSource
+import com.gt.cmp_contactlist.contacts.domain.ContactValidator
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -137,9 +138,42 @@ class ContactListViewModel(
 
             ContactListEvent.SaveContact -> {
                 newContact?.let { contact ->
+                    val result = ContactValidator.validateContract(contact)
+                    val errors = listOfNotNull(
+                        result.firsNameError,
+                        result.lastNameError,
+                        result.emailError,
+                        result.phoneNumberError,
+                    )
 
+                    if (errors.isEmpty()) {
+                        _state.update {
+                            it.copy(
+                                isAddContactSheetOpen = false,
+                                firstNameError = null,
+                                lastNameError = null,
+                                emailError = null,
+                                phoneNumberError = null
+                            )
+                        }
+                        viewModelScope.launch {
+                            contactDataSource.insertContact(contact)
+                            delay(300L)
+                            newContact = null
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                firstNameError = result.firsNameError,
+                                lastNameError = result.lastNameError,
+                                emailError = result.emailError,
+                                phoneNumberError = result.phoneNumberError,
+                            )
+                        }
+                    }
                 }
             }
+
             is ContactListEvent.SelectContact -> {
                 _state.update {
                     it.copy(
@@ -148,6 +182,8 @@ class ContactListViewModel(
                     )
                 }
             }
+
+            else -> Unit
         }
     }
 }
