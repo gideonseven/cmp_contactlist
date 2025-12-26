@@ -8,6 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.gt.cmp_contactlist.core.presentation.ImagePickerFactory
 import com.gt.cmp_contactlist.di.AppModule
 
 class MainActivity : ComponentActivity() {
@@ -18,8 +19,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             App(
                 darkTheme = isSystemInDarkTheme(),
-                dynamicColor = true,
-                appModule = AppModule(LocalContext.current.applicationContext)
+                dynamicColor = false,
+                appModule = AppModule(LocalContext.current.applicationContext),
+                imagePicker = ImagePickerFactory().createPicker()
             )
         }
     }
@@ -31,6 +33,7 @@ fun AppAndroidPreview() {
     App(
         darkTheme = true,
         dynamicColor = true,
-        appModule = AppModule(LocalContext.current.applicationContext)
+        appModule = AppModule(LocalContext.current.applicationContext),
+        imagePicker = ImagePickerFactory().createPicker()
     )
 }

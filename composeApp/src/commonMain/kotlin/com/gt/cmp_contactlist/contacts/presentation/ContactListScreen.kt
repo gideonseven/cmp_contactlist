@@ -18,13 +18,20 @@ import androidx.compose.ui.unit.dp
 import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.presentation.components.AddContactSheet
 import com.gt.cmp_contactlist.contacts.presentation.components.ContactListItem
+import com.gt.cmp_contactlist.core.presentation.ImagePicker
 
 @Composable
 fun ContactListScreen(
     state: ContactListState,
     newContact: Contact?,
-    onEvent: (ContactListEvent) -> Unit
+    onEvent: (ContactListEvent) -> Unit,
+    imagePicker: ImagePicker
 ) {
+
+    imagePicker.registerPicker { imageBytes ->
+        onEvent(ContactListEvent.OnPhotoPicked(imageBytes))
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -73,6 +80,11 @@ fun ContactListScreen(
         state = state,
         newContact = newContact,
         isOpen = state.isAddContactSheetOpen,
-        onEvent = onEvent
+        onEvent = { event ->
+            if (event is ContactListEvent.OnAddPhotoClicked) {
+                imagePicker.pickImage()
+            }
+            onEvent(event)
+        }
     )
 }
