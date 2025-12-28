@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.presentation.components.AddContactSheet
+import com.gt.cmp_contactlist.contacts.presentation.components.ContactDetailSheet
 import com.gt.cmp_contactlist.contacts.presentation.components.ContactListItem
 import com.gt.cmp_contactlist.core.presentation.ImagePicker
 
@@ -75,6 +76,12 @@ fun ContactListScreen(
             }
         }
     }
+
+    ContactDetailSheet(
+        isOpen = state.isSelectedContactSheetOpen,
+        selectedContact = state.selectedContact,
+        onEvent = onEvent,
+    )
 
     AddContactSheet(
         state = state,
