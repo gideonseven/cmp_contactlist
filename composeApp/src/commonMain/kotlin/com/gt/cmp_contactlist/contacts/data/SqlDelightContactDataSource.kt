@@ -4,15 +4,19 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.domain.ContactDataSource
+import com.gt.cmp_contactlist.core.data.ImageStorage
 import com.gt.cmp_contactlist.sqldelight.database.ContactDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.supervisorScope
 import kotlin.time.Clock
 
 class SqlDelightContactDataSource(
-    db: ContactDatabase
+    db: ContactDatabase,
+    private val imageStorage: ImageStorage
 ) : ContactDataSource {
     private val queries = db.contactQueries
 
@@ -22,8 +26,12 @@ class SqlDelightContactDataSource(
             .asFlow()
             .mapToList(Dispatchers.IO)
             .map { contactEntities ->
-                contactEntities.map { contactEntity ->
-                    contactEntity.toContact()
+                supervisorScope {
+                    contactEntities
+                        .map {
+                            async { it.toContact(imageStorage) }
+                        }
+                        .map { it.await() }
                 }
             }
     }
@@ -34,13 +42,20 @@ class SqlDelightContactDataSource(
             .asFlow()
             .mapToList(Dispatchers.IO)
             .map { contactEntities ->
-                contactEntities.map { contactEntity ->
-                    contactEntity.toContact()
+                supervisorScope {
+                    contactEntities
+                        .map {
+                            async { it.toContact(imageStorage) }
+                        }
+                        .map { it.await() }
                 }
             }
     }
 
     override suspend fun insertContact(contact: Contact) {
+        val imagePath = contact.photoBytes?.let {
+            imageStorage.saveImage(it)
+        }
         queries.insertContactEntity(
             id = contact.id,
             firstName = contact.firstName,
@@ -48,11 +63,16 @@ class SqlDelightContactDataSource(
             phoneNumber = contact.phoneNumber,
             email = contact.email,
             createdAt = Clock.System.now().toEpochMilliseconds(),
-            imagePath = null
+            imagePath = imagePath
         )
     }
 
     override suspend fun deleteContact(id: Long) {
+        val entity = queries.getContactById(id).executeAsOne()
+        entity.imagePath?.let {
+            imageStorage.deleteImage(it)
+        }
+
         queries.deleteContact(id)
     }
 

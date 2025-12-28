@@ -1,6 +1,8 @@
 package com.gt.cmp_contactlist
 
+import androidx.compose.ui.uikit.LocalUIViewController
 import androidx.compose.ui.window.ComposeUIViewController
+import com.gt.cmp_contactlist.core.presentation.ImagePickerFactory
 import com.gt.cmp_contactlist.di.AppModule
 import platform.UIKit.UIScreen
 import platform.UIKit.UIUserInterfaceStyle
@@ -15,6 +17,7 @@ fun MainViewController() = ComposeUIViewController {
     App(
         darkTheme = isDarkTheme,
         dynamicColor = false,
-        appModule = AppModule()
+        appModule = AppModule(),
+        imagePicker = ImagePickerFactory(LocalUIViewController.current).createPicker()
     )
 }
