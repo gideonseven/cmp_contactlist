@@ -19,6 +19,7 @@ import com.gt.cmp_contactlist.contacts.domain.Contact
 import com.gt.cmp_contactlist.contacts.presentation.components.AddContactSheet
 import com.gt.cmp_contactlist.contacts.presentation.components.ContactDetailSheet
 import com.gt.cmp_contactlist.contacts.presentation.components.ContactListItem
+import com.gt.cmp_contactlist.contacts.presentation.components.RecentlyAddedContacts
 import com.gt.cmp_contactlist.core.presentation.ImagePicker
 
 @Composable
@@ -53,6 +54,16 @@ fun ContactListScreen(
             contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            item {
+                RecentlyAddedContacts(
+                    contacts = state.recentlyAddedContacts,
+                    onclick = {
+                        onEvent(ContactListEvent.SelectContact(it))
+                    }
+                )
+            }
+
             item {
                 Text(
                     text = "My contacts (${state.contacts.size})",
