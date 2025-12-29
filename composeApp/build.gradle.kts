@@ -15,7 +15,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosX64(),
@@ -26,10 +26,12 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         all {
+            languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
             languageSettings.optIn("kotlin.time.ExperimentalTime")
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
         }
         androidMain.dependencies {
             implementation(compose.preview)
